@@ -2,11 +2,11 @@
 from __future__ import unicode_literals
 from django.test import TestCase
 from expenses.models import Expense, Person, BudgetGroup
-from expenses.serializers import ExpenseSerializer
+from expenses.serializers import BudgetGroupSerializer, ExpenseSerializer, PersonSerializer
 from datetime import datetime
 
 
-class ExpensesTestCase(TestCase):
+class ExpensesSerializerTestCase(TestCase):
     def test_serializes_correctly(self):
         """
         Test that only specific fields are serialized
@@ -23,7 +23,7 @@ class ExpensesTestCase(TestCase):
         serializer = ExpenseSerializer(expense)
         self.assertEqual(
             {
-                'spent_at': '2017-05-17T00:00:00',
+                'id': str(expense.id), 'spent_at': '2017-05-17T00:00:00',
                 'spent_for': spent_for.id, 'spent_for_purpose': u'',
                 'spent_by': spent_by.id, 'amount_spent': u'100.00'
 
@@ -31,3 +31,36 @@ class ExpensesTestCase(TestCase):
             serializer.data
         )
 
+
+class PersonSerializerTestCase(TestCase):
+    def test_serializes_correctly(self):
+        """
+        Test that only specific fields are serialized
+        """
+
+        person = Person(username = "Person 1")
+        serializer = PersonSerializer(person)
+        self.assertEqual(
+            {
+                'id': str(person.id), 'username': person.username
+
+            },
+            serializer.data
+        )
+
+
+class BudgetGroupSerializerTestCase(TestCase):
+    def test_serializes_correctly(self):
+        """
+        Test that only specific fields are serialized
+        """
+
+        budget_group = BudgetGroup(name = "Funky group")
+        serializer = BudgetGroupSerializer(budget_group)
+        self.assertEqual(
+            {
+                'id': str(budget_group.id), 'name': budget_group.name
+
+            },
+            serializer.data
+        )
